@@ -4,6 +4,16 @@ class Item extends Component {
     render() {
         let { item } = this.props;
 
+        if(item === 0) {
+            return (
+                <tr>
+                    <td colSpan="4" className="text-center">  
+                        <h4>No Item</h4>
+                    </td>
+                </tr>
+            )
+        }
+
         let classNameLabel = '';
         let nameLabel = '';
         switch (item.level) {
@@ -28,11 +38,14 @@ class Item extends Component {
                 <td><span className={classNameLabel}>{nameLabel}</span></td>
                 <td>
                     <button type="button" className="btn btn-warning btn-sm">Edit</button>
-                    <button type="button" className="btn btn-danger btn-sm">Delete</button>
-                </td>
+                    <button
+                        type="button"
+                        className="btn btn-danger btn-sm"
+                        onClick={() => this.props.handleShowAlert(item)}>Delete</button>
+                </td>                
             </tr>
         )
-    }
+    }   
 }
 
 export default Item;

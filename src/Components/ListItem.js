@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import SweetAlert from 'sweetalert-react';
 
 import Item from './Item'
 import Items from '../MockData/Items';
@@ -7,7 +8,10 @@ class ListItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: Items
+      items: Items,
+      showAlert: false,
+      titleAlert: '',
+      idAlert: ''
     }
   }
 
@@ -28,17 +32,53 @@ class ListItem extends Component {
             {this.renderItem()}
           </tbody>
         </table>
+        <SweetAlert
+          show={this.state.showAlert}
+          title="Delete Item"
+          text={this.state.titleAlert}
+          showCancelButton
+          onOutsideClick={() => this.setState({ showAlert: false })}
+          onEscapeKey={() => this.setState({ showAlert: false })}
+          onCancel={() => this.setState({ showAlert: false })}
+          onConfirm={() => this.handleDeleteItem()}
+        />
       </div>
     )
   }
 
-  renderItem = () => 
-  {
+  renderItem = () => {
     let { items } = this.state;
 
-    return items.map((item) => 
-    {
-      return (<Item item = {item}/>)
+    if (items.length === 0) {
+      return <Item item={0} />
+    }
+
+    return items.map((item) => {
+      return (<Item item={item} handleShowAlert={this.handleShowAlert} />)
+    });
+  }
+
+  handleShowAlert = (item) => {
+    this.setState({
+      showAlert: true,
+      titleAlert: item.name,
+      idAlert: item.id
+    });
+  }
+
+  handleDeleteItem = () => {
+    let { idAlert, items } = this.state;
+    if (items.length > 0) {
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].id === idAlert) {
+          items.splice(i, 1);
+          break;
+        }
+      }
+    }
+
+    this.setState({
+      showAlert: false
     });
   }
 }
